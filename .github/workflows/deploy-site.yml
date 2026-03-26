@@ -39,17 +39,10 @@ jobs:
           CI: true
         run: npm run build
 
-      - name: Package Pages artifact
-        run: |
-          tar -C dist -cf "$RUNNER_TEMP/github-pages.tar" .
-          gzip -f "$RUNNER_TEMP/github-pages.tar"
-
       - name: Upload Pages artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-pages-artifact@v4
         with:
-          name: github-pages
-          path: ${{ runner.temp }}/github-pages.tar.gz
-          retention-days: 1
+          path: dist
 
   deploy:
     environment:
