@@ -9,7 +9,7 @@
     "assets:synthesize-spread": "node scripts/synthesize-spread-from-panels.mjs --source=../covers/projects/Essentialism/01 --hinge=34",
     "assets:ingest": "node scripts/ingest-cover-assets.mjs --slug=essentialism --source=../covers/projects/Essentialism/01",
     "dev": "astro dev",
-    "prebuild": "npm run assets:ingest",
+    "prebuild": "node scripts/ensure-build-assets.mjs --slug=essentialism --source=../covers/projects/Essentialism/01",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
