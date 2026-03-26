@@ -1,0 +1,49 @@
+---
+import CaseMedia from '../components/case/CaseMedia.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCases } from '../lib/content/cases';
+
+const cases = await getCases();
+const featuredCase = cases.find((entry) => entry.data.featured) ?? cases[0];
+---
+
+<BaseLayout
+  title="Book Covers Portfolio"
+  description="Portfolio of book cover projects with static-first presentation and optional motion accents."
+>
+  <section class="card" style="padding: 1.2rem;">
+    <p class="meta" style="margin: 0;">Featured case</p>
+    <h1 style="margin: 0.4rem 0 0.8rem; font-size: clamp(1.7rem, 3vw, 2.6rem);">
+      {featuredCase.data.title}
+    </h1>
+    <p class="meta" style="max-width: 66ch; margin-top: 0;">
+      {featuredCase.data.shortDescription}
+    </p>
+
+    <div class="case-media-shell" style="margin-top: 1rem;">
+      <CaseMedia
+        motion={featuredCase.data.motion}
+        fallbackPoster={featuredCase.data.cover.poster}
+        alt={`${featuredCase.data.title} featured media`}
+        loading="eager"
+      />
+    </div>
+  </section>
+
+  <section style="margin-top: 2rem;">
+    <h2 style="margin: 0; font-size: 1.35rem;">Cases</h2>
+    <p class="meta">Grid-first overview for quick browsing and smooth transition to detailed case pages.</p>
+
+    <div class="case-grid">
+      {
+        cases.map((entry) => (
+          <a class="card case-card" href={`/cases/${entry.data.slug}`}>
+            <img src={entry.data.cover.thumb} alt={`${entry.data.title} cover`} loading="lazy" />
+            <p style="margin: 0.9rem 0 0.2rem; font-weight: 600;">{entry.data.title}</p>
+            <p class="meta" style="margin: 0;">{entry.data.year} · {entry.data.project}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

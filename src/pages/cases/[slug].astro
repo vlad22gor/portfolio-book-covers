@@ -1,0 +1,40 @@
+---
+import { getCollection, render } from 'astro:content';
+import CaseMedia from '../../components/case/CaseMedia.astro';
+import CaseLayout from '../../layouts/CaseLayout.astro';
+
+export async function getStaticPaths() {
+  const cases = await getCollection('cases');
+
+  return cases.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<CaseLayout title={`${entry.data.title} — Case`} description={entry.data.seo.description}>
+  <article>
+    <header style="margin-bottom: 1rem;">
+      <p class="meta" style="margin: 0;">Case study</p>
+      <h1 style="margin: 0.35rem 0 0.45rem; font-size: clamp(1.7rem, 3vw, 2.5rem);">{entry.data.title}</h1>
+      <p class="meta" style="margin: 0;">{entry.data.year} · {entry.data.project}</p>
+    </header>
+
+    <div class="case-media-shell">
+      <CaseMedia
+        motion={entry.data.motion}
+        fallbackPoster={entry.data.cover.poster}
+        alt={`${entry.data.title} case media`}
+      />
+    </div>
+
+    <section class="card" style="padding: 1rem; margin-top: 1rem;">
+      <p class="meta" style="margin-top: 0;">Summary</p>
+      <Content />
+    </section>
+  </article>
+</CaseLayout>

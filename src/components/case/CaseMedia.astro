@@ -1,0 +1,48 @@
+---
+interface MotionMedia {
+  poster: string;
+  webm?: string;
+  mp4?: string;
+}
+
+interface Props {
+  motion?: MotionMedia;
+  fallbackPoster: string;
+  alt: string;
+  className?: string;
+  loading?: 'lazy' | 'eager';
+}
+
+const {
+  motion,
+  fallbackPoster,
+  alt,
+  className,
+  loading = 'lazy',
+} = Astro.props;
+
+const hasVideo = Boolean(motion?.webm || motion?.mp4);
+const poster = motion?.poster ?? fallbackPoster;
+const mergedClassName = ['case-media', className].filter(Boolean).join(' ');
+---
+
+{
+  hasVideo ? (
+    <video
+      class={mergedClassName}
+      poster={poster}
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      aria-label={alt}
+    >
+      {motion?.webm && <source src={motion.webm} type="video/webm" />}
+      {motion?.mp4 && <source src={motion.mp4} type="video/mp4" />}
+      <img class="case-media" src={poster} alt={alt} loading={loading} />
+    </video>
+  ) : (
+    <img class={mergedClassName} src={poster} alt={alt} loading={loading} />
+  )
+}
